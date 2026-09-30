@@ -186,3 +186,6 @@ If any of the validation steps print a `FAIL:` line, the notebook stops and you�
 | **GPU** | Not required. |
 | **Colab** | Tested in Google Colab. |
 | **Random seed** | `SEED = 78` (ensures deterministic sampling, bootstrap, etc.). |
+
+**AI-Usage Statement**
+This README documentation was created with the assistance of OpenAI’s ChatGPT (GPT‑4). The AI helped to generate the text for the README. All text was reviewed, edited, and approved by the author.
