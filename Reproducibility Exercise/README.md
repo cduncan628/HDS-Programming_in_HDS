@@ -72,6 +72,7 @@ cd diabetes-risk-factor-analysis
 2. Install required packages
 
 3. Place the dataset
+
 Preferred: create a folder called data in the project root and copy the CSV there:
 ```python
 diabetes-risk-factor-analysis/
