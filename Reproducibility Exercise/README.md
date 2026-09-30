@@ -90,12 +90,31 @@ jupyter notebook "diabetes_risk_factor_analysis.ipynb"
 In Google Colab you can simply upload the notebook and the CSV.
 
 ## Instructions for executing the notebook from start to finish
-| Action | How |
-|--------|-----|
-| **Restart kernel** | In Jupyter: `Kernel → Restart & Run All` (or in Colab: *Runtime → Restart runtime* then *Runtime → Run all*) |
-| **Run cells sequentially** | The notebook is written to stop on the first validation failure, so running top‑to‑bottom guarantees that each step has the required inputs. |
-| **Key checkpoints** | <ul><li>**Setup** – version print‑out (should show “OK” for each library).</li><li>**Validation** – a series of `PASS:` messages; any `FAIL:` aborts execution.</li><li>**Zero audit** – a `zero_table` DataFrame summarizing impossible zeros.</li><li>**Descriptive tables** – `df_clean.describe()` and group‑wise mean ± SD.</li><li>**Plots** – two histogram figures appear inline.</li></ul> |
-| **Customizing** | If you replace the dataset, edit the constants in the **Configuration** section (`EXPECTED_ROW_COUNT`, `EXPECTED_OUTCOME_COUNTS`, possibly `ZERO_IMPOSSIBLE`). |
+| Step | What the notebook does | Key code / markdown |
+|------|------------------------|--------------------|
+| **Setup / Environment** | Imports all required libraries, prints their versions, and sets a global random seed (`SEED = 78`). | `import …` + version‑check block |
+| **Configuration** | Defines constants (file name, expected column order, expected row count, etc.). | `SEED`, `file_name`, `EXPECTED_COLUMNS`, … |
+| **Data source / provenance** | Describes the original source (UCI / Kaggle copy of the Pima Indians Diabetes Database) and the role of the CSV file. | “Data Source / Provenance” markdown |
+| **Data loading** | Looks for `Example Dataset_Diabetes.csv` in `./data/` (preferred) or the notebook’s folder; raises a clear error if not found. | `if os.path.exists(...):` |
+| **Data validation** | Checks column names & order, row count, numeric types, no NaNs, no duplicates, correct `Outcome` values, outcome counts, no negative values, sensible ranges for age, glucose & BMI. Stops execution on the first failure. | `check()` helper |
+| **Zero‑value audit** | Counts zeros in columns where a zero is impossible (Glucose, D_BP, Skin_Thickness, Insulin, BMI, Age) and flags those columns. | `zero_table` |
+| **Data preparation** | Copies the raw frame (`df_raw`) → `df_clean` and replaces impossible zeros with `NaN`. | `df_clean[ZERO_IMPOSSIBLE] = …` |
+| **Descriptive statistics** | – Overall `df_clean.describe()`  <br> – Group‑wise mean ± SD for each predictor (by `Outcome`). | `group_stats = df_clean.groupby("Outcome")…` |
+| **Visualizations** | – Histogram of Glucose <br> – Histogram of BMI <br> – (Boxplot of Glucose by Outcome, Scatter of Glucose vs. BMI – in the full notebook) | `plt.hist(...)` |
+| **Normality assessment** | Computes skewness and runs the Shapiro‑Wilk test for each outcome group; prints the statistics and p‑values. | `glucose_no.skew()`, `stats.shapiro()` |
+| **Q‑Q plots** | Generates side‑by‑side quantile‑quantile plots for glucose in the non‑diabetic and diabetic groups to visualize normality. | `stats.probplot(..., plot=plt)` |
+| **Equality‑of‑variances check** | Performs Levene’s test; decides whether to use Welch’s or Student’s t‑test based on the p‑value. | `stats.levene(...)` |
+| **Two‑sample t‑test** | Runs the appropriate independent‑samples t‑test (Welch or Student) comparing glucose means between groups; extracts statistic, p‑value, mean difference, and 95 % CI. | `stats.ttest_ind(..., equal_var=equal_var)` |
+| **Effect‑size calculation** | Computes Cohen’s d using the pooled standard deviation. | `cohens_d = mean_diff / pooled_sd` |
+| **Logistic‑regression fitting** | Fits a multivariable logistic model with the six predictors, displays the full StatsModels summary. | `sm.Logit(y, X).fit(disp=0)` |
+| **Overall model test** | Performs the likelihood‑ratio test, reports McFadden’s pseudo‑R², and makes a decision on overall model significance. | `logit_model.llr`, `logit_model.prsquared` |
+| **Influence diagnostics** | Calculates Cook’s distance for each observation; flags subjects exceeding the 4/n threshold. | `glm_model.get_influence().cooks_distance` |
+| **Multicollinearity check** | Computes variance‑inflation factors (VIF) for all predictors; reports any VIF ≥ 5. | `variance_inflation_factor(...)` |
+| **Linearity (Box‑Tidwell) test** | Adds \(X\*ln(X)\) terms for each predictor, fits a logistic model, and evaluates the p‑values to detect non‑linear relationships. | `bt_data[…]`, `sm.Logit(...).fit(...)` |
+| **Adjusted odds‑ratio table** | Builds a tidy table of β, OR per unit, 95 % CI, and p‑value; also computes ORs for clinically meaningful increments (e.g., +10 mg/dL glucose, +5 kg/m² BMI). | `or_table = pd.DataFrame(...)` |
+| **Plain‑language interpretation** | Loops over the predictors and prints a concise sentence summarizing the effect size, direction, statistical significance, and confidence interval for each. | `for name in logit_predictors: … print(...)` |
+| **Bootstrap confidence interval for BMI** | Resamples BMI 1 000 times with replacement, computes the mean for each resample, and reports the empirical 95 % CI. | `bmi_values.sample(...); np.percentile(boot_means, …)` |
+| **Final results summary table** | Collates the most important numbers (sample size, prevalence, mean glucose, t‑test details, odds ratios, Hosmer‑Lemeshow p‑value, etc.) into a two‑column DataFrame for easy export. | `results = pd.DataFrame({"Result":…, "Value":…})` |
 
 
 ## Expected Outputs  
