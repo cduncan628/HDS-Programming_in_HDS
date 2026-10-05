@@ -4,6 +4,9 @@
 This project explores a dataset of Phase 3 clinical trials to get ready for a
 binary classification model that predicts whether a trial will meet its primary endpoint.
 
+## Proposed Prediction Problem
+Using information available before a Phase 3 trial begins (Phase 2 results, trial design, sponsor and drug characteristics), predict whether the trial will meet its primary endpoint (be successful).
+
 ## Dataset
 - **Name:** Clinical Trial Phase 3 Success
 - **Source:** (https://www.kaggle.com/datasets/sergionefedov/what-predicts-a-phase-3-trials-success)
