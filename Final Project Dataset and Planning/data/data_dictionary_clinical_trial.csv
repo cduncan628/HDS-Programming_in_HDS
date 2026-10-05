@@ -1,0 +1,18 @@
+column,type,description
+trial_id,string,Unique trial id
+therapeutic_area,string,oncology / cardiovascular / cns / infectious_disease / immunology / metabolic / respiratory / rare_disease / vaccine
+uses_biomarker,int,1 if biomarker-guided patient selection (raises success)
+phase2_effect_size,float,Strength of the Phase 2 efficacy signal (0-10)
+phase2_pvalue_strength,float,Strength/robustness of Phase 2 statistical evidence (0-10)
+endpoint_type,string,"hard_survival (OS, hardest) / clinical / surrogate (easiest)"
+enrollment,int,Number of patients enrolled
+statistical_power,float,Trial statistical power (0-1)
+sponsor_type,string,large_pharma / mid_pharma / small_biotech / academic
+novel_mechanism,int,1 if first-in-class mechanism (riskier)
+prior_approvals_target,int,Number of prior approved drugs on the same target (precedented = safer)
+randomized,int,1 if randomized
+double_blind,int,1 if double-blind
+active_comparator,int,1 if active comparator (vs placebo)
+years_in_development,float,Years the program has been in development
+orphan_designation,int,1 if orphan-drug designation
+trial_success,int,TARGET (binary): 1 if the Phase 3 trial met its primary endpoint (~55%)
