@@ -104,7 +104,7 @@ imbalanced-learn 0.14.2
 | Realized success rate                           | **55.0%** (55.04 % of the 42 000 trials succeeded) |
 | Selected model                                  | **Logistic Regression (tuned)** |
 | CV / test precision@30 %                        | **0.725** / **0.716** |
-| Test AUC‑ROC (oracle ceiling)                   | **0.667** (oracle ceiling ≈ **0.679**) |
+| Test AUC‑ROC.                                   | **0.667** |
 | Chosen threshold → precision, share funded      | **0.603 → 68.9% precision, 39.4% of trials funded** |
 
 ## Using your own dataset
